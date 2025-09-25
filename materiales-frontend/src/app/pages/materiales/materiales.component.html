@@ -1,0 +1,132 @@
+<div class="container my-4">
+  <h2 class="mb-3">Gestión de Materiales</h2>
+
+  <div *ngIf="mensaje" class="alert alert-info py-2">{{ mensaje }}</div>
+
+  <!-- Filtros -->
+  <div class="card p-3 mb-3">
+    <div class="row g-3">
+      <div class="col-md-3">
+        <label class="form-label">Tipo</label>
+        <input class="form-control" placeholder="Ej. Construccion" [(ngModel)]="filtros.tipo">
+        <button class="btn btn-primary mt-2" (click)="buscarPorTipo()">Buscar por Tipo</button>
+      </div>
+
+      <div class="col-md-3">
+        <label class="form-label">Rango de Fechas (Compra)</label>
+        <input type="date" class="form-control" [(ngModel)]="filtros.inicio">
+        <input type="date" class="form-control mt-1" [(ngModel)]="filtros.fin">
+        <button class="btn btn-primary mt-2" (click)="buscarPorFecha()">Buscar por Fechas</button>
+      </div>
+
+      <div class="col-md-3">
+        <label class="form-label">Ciudad ID</label>
+        <input type="number" class="form-control" [(ngModel)]="filtros.ciudadId">
+        <button class="btn btn-primary mt-2" (click)="buscarPorCiudad()">Buscar por Ciudad</button>
+      </div>
+
+      <div class="col-md-3">
+        <label class="form-label">Estado</label>
+        <select class="form-select" [(ngModel)]="filtros.estado">
+          <option value="">-- Selecciona --</option>
+          <option>ACTIVO</option>
+          <option>DISPONIBLE</option>
+          <option>ASIGNADO</option>
+        </select>
+        <button class="btn btn-primary mt-2" (click)="buscarPorEstado()">Buscar por Estado</button>
+      </div>
+    </div>
+
+    <div class="mt-3">
+      <button class="btn btn-outline-secondary me-2" (click)="cargarTodos()">
+        <i class="bi bi-list-ul"></i> Ver todos
+      </button>
+    </div>
+  </div>
+
+  <!-- Form Crear / Actualizar -->
+  <div class="card p-3 mb-4">
+    <h5 class="mb-3">{{ editando ? 'Actualizar Material' : 'Crear Material' }}</h5>
+
+    <div class="row g-3">
+      <div class="col-md-3">
+        <label class="form-label">Nombre</label>
+        <input class="form-control" [(ngModel)]="material.nombre">
+      </div>
+      <div class="col-md-3">
+        <label class="form-label">Tipo</label>
+        <input class="form-control" [(ngModel)]="material.tipo">
+      </div>
+      <div class="col-md-3">
+        <label class="form-label">Precio</label>
+        <input type="number" class="form-control" [(ngModel)]="material.precio">
+      </div>
+      <div class="col-md-3">
+        <label class="form-label">Estado</label>
+        <select class="form-select" [(ngModel)]="material.estado">
+          <option>ACTIVO</option>
+          <option>DISPONIBLE</option>
+          <option>ASIGNADO</option>
+        </select>
+      </div>
+
+      <div class="col-md-6">
+        <label class="form-label">Descripción</label>
+        <input class="form-control" [(ngModel)]="material.descripcion">
+      </div>
+      <div class="col-md-3">
+        <label class="form-label">Fecha Compra</label>
+        <input type="date" class="form-control" [(ngModel)]="material.fechaCompra">
+      </div>
+      <div class="col-md-3">
+        <label class="form-label">Fecha Venta (opcional)</label>
+        <input type="date" class="form-control" [(ngModel)]="material.fechaVenta">
+      </div>
+      <div class="col-md-3">
+        <label class="form-label">Ciudad</label>
+        <select class="form-select" [(ngModel)]="material.ciudad.id">
+            <option value="">-- Selecciona Ciudad --</option>
+            <option *ngFor="let c of ciudades" [value]="c.id">
+            {{ c.id }}
+            </option>
+        </select>
+        </div>
+    </div>
+
+    <div class="mt-3">
+      <button class="btn btn-success me-2" (click)="guardar()">
+        {{ editando ? 'Actualizar' : 'Crear' }}
+      </button>
+      <button class="btn btn-outline-secondary" (click)="reset()">Limpiar</button>
+    </div>
+  </div>
+
+  <!-- Tabla -->
+  <div class="table-responsive">
+    <table class="table table-striped align-middle">
+      <thead class="table-light">
+        <tr>
+          <th>ID</th><th>Nombre</th><th>Tipo</th><th>Precio</th>
+          <th>Estado</th><th>Ciudad</th><th>Compra</th><th>Venta</th><th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let m of materiales">
+          <td>{{ m.id }}</td>
+          <td>{{ m.nombre }}</td>
+          <td>{{ m.tipo }}</td>
+          <td>{{ m.precio | number:'1.0-0' }}</td>
+          <td>{{ m.estado }}</td>
+          <td>{{ m.ciudad?.id }}</td>
+          <td>{{ m.fechaCompra | date:'yyyy-MM-dd' }}</td>
+          <td>{{ m.fechaVenta   | date:'yyyy-MM-dd' }}</td>
+          <td>
+            <button class="btn btn-warning btn-sm" (click)="editar(m)">
+              <i class="bi bi-pencil-square"></i> Editar
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
